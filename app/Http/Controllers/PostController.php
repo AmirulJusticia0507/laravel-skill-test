@@ -9,9 +9,6 @@ use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
-    /**
-     * GET /posts
-     */
     public function index(): JsonResponse
     {
         $posts = Post::with('user')
@@ -31,43 +28,28 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * GET /posts/create
-     */
     public function create(): string
     {
         return 'posts.create';
     }
 
-    /**
-     * POST /posts
-     */
     public function store(StorePostRequest $request): JsonResponse
     {
-        $post = $request->user()
-            ->posts()
-            ->create($request->validated());
+        $post = $request->user()->posts()->create($request->validated());
 
         return response()->json($post, 201);
     }
 
-    /**
-     * GET /posts/{post}
-     */
     public function show(Post $post): JsonResponse
     {
         abort_if(
-            $post->is_draft ||
-            ($post->published_at && $post->published_at->isFuture()),
+            $post->is_draft || $post->published_at === null || $post->published_at->isFuture(),
             404
         );
 
         return response()->json($post->load('user'));
     }
 
-    /**
-     * GET /posts/{post}/edit
-     */
     public function edit(Post $post): string
     {
         $this->authorize('update', $post);
@@ -75,9 +57,6 @@ class PostController extends Controller
         return 'posts.edit';
     }
 
-    /**
-     * PUT/PATCH /posts/{post}
-     */
     public function update(UpdatePostRequest $request, Post $post): JsonResponse
     {
         $post->update($request->validated());
@@ -85,15 +64,11 @@ class PostController extends Controller
         return response()->json($post);
     }
 
-    /**
-     * DELETE /posts/{post}
-     */
-    public function destroy(Post $post): JsonResponse
+    public function destroy(Post $post): Response
     {
         $this->authorize('delete', $post);
-
         $post->delete();
 
-        return response()->json(null, 204);
+        return response()->noContent();
     }
 }

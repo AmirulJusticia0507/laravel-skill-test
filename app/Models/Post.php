@@ -11,14 +11,10 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
         'title',
         'content',
+        'is_draft',
         'published_at',
-    ];
-
-    protected $casts = [
-        'published_at' => 'datetime',
     ];
 
     public function user()
