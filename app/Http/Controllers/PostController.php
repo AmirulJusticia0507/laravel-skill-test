@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class PostController extends Controller
 {
@@ -59,6 +60,8 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post): JsonResponse
     {
+        $this->authorize('update', $post);
+
         $post->update($request->validated());
 
         return response()->json($post);
@@ -67,6 +70,7 @@ class PostController extends Controller
     public function destroy(Post $post): Response
     {
         $this->authorize('delete', $post);
+
         $post->delete();
 
         return response()->noContent();
