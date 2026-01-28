@@ -16,10 +16,12 @@ class Post extends Model
         'published_at',
     ];
 
-    /**
-     * Author of the post
-     */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    protected $casts = [
+        'is_draft' => 'boolean',
+        'published_at' => 'datetime',
+    ];
+
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

@@ -8,17 +8,16 @@ class UpdatePostRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Hanya author yang bisa update
-        return $this->user()?->can('update', $this->route('post'));
+        return $this->user()->can('update', $this->route('post'));
     }
 
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'is_draft' => 'sometimes|boolean',
-            'published_at' => 'nullable|date|after_or_equal:today',
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'is_draft' => ['sometimes', 'boolean'],
+            'published_at' => ['nullable', 'date', 'after_or_equal:today'],
         ];
     }
 }

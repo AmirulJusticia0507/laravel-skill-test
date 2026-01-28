@@ -26,10 +26,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /**
-     * Posts authored by the user
-     */
-    public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function posts()
     {
         return $this->hasMany(Post::class);
     }
