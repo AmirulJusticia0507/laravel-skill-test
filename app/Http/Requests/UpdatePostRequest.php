@@ -6,18 +6,21 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePostRequest extends FormRequest
 {
+    /**
+     * DELEGACY TO POLICY
+     */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('update', $this->route('post')) ?? false;
     }
 
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'is_draft' => 'sometimes|boolean',
-            'published_at' => 'nullable|date|after_or_equal:today',
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'is_draft' => ['sometimes', 'boolean'],
+            'published_at' => ['nullable', 'date'],
         ];
     }
 }
